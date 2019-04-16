@@ -38,4 +38,10 @@ public class ProjectSlideResponseDto {
      */
     @ApiModelProperty(value = "The list of the related JS libraries used for the execution of the widgets", dataType = "java.util.List")
     private List<String> librariesToken = new ArrayList<>();
+
+    /**
+     * The parent project token
+     */
+    @ApiModelProperty(value = "The parent project token")
+    private String projectToken;
 }
