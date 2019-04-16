@@ -31,10 +31,11 @@ import java.util.List;
  * Project/dashboard entity
  */
 @Entity
+@Table(name = "PROJECT_SLIDE")
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Project extends AbstractAuditingEntity<Long> {
+public class ProjectSlide extends AbstractAuditingEntity<Long> {
 
     /**
      * The project id
@@ -44,27 +45,42 @@ public class Project extends AbstractAuditingEntity<Long> {
     private Long id;
 
     /**
-     * The project name
+     * The number of column
      */
-    @Column(nullable = false)
-    private String name;
+    @Column
+    private Integer maxColumn;
 
     /**
-     * The project token
+     * The height of the widgets
      */
-    @Column(nullable = false)
-    private String token;
+    @Column
+    private Integer widgetHeight;
 
     /**
-     * The list of slides for this project
+     * The css style of the grid
      */
-    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
-    private List<ProjectSlide> projectSlides = new ArrayList<>();
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
+    private String cssStyle;
 
     /**
-     * The list of users of the project
+     * The screenshot of the dashboard
      */
-    @ManyToMany
-    @JoinTable(name = "user_project", joinColumns = {@JoinColumn(name = "project_id")}, inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private List<User> users = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "screenshot_id")
+    private Asset screenshot;
+
+    /**
+     * The related project of this slide
+     */
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
+    /**
+     * The list of widgets related to it
+     */
+    @OneToMany(mappedBy = "project_slide", cascade = CascadeType.REMOVE)
+    @OrderBy("row ASC, col ASC")
+    private List<ProjectWidget> widgets = new ArrayList<>();
 }
