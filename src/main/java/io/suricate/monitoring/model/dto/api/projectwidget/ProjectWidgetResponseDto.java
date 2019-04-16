@@ -101,10 +101,10 @@ public class ProjectWidgetResponseDto extends AbstractDto {
     private WidgetState state;
 
     /**
-     * The related project token
+     * The related project slide
      */
-    @ApiModelProperty(value = "The related project token")
-    private String projectToken;
+    @ApiModelProperty(value = "The related project slide id")
+    private Long projectSlideId;
 
     /**
      * The related widget id

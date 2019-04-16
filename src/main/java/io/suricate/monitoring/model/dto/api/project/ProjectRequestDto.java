@@ -37,19 +37,4 @@ public class ProjectRequestDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The project name", required = true)
     private String name;
-    /**
-     * Number of column in the dashboard
-     */
-    @ApiModelProperty(value = "The number of columns in the dashboard")
-    private Integer maxColumn;
-    /**
-     * The height for widgets contained
-     */
-    @ApiModelProperty(value = "The height in pixel of the widget")
-    private Integer widgetHeight;
-    /**
-     * The global css for the dashboard
-     */
-    @ApiModelProperty(value = "The css style of the dashboard grid")
-    private String cssStyle;
 }
