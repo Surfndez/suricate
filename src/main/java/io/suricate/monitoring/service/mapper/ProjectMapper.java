@@ -33,7 +33,9 @@ import java.util.List;
 @Component
 @Mapper(
         componentModel = "spring",
-        uses = {ProjectSlideMapper.class}
+        uses = {
+                ProjectSlideMapper.class
+        }
 )
 public abstract class ProjectMapper {
 
