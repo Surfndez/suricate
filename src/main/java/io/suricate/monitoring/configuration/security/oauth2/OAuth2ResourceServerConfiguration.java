@@ -19,6 +19,7 @@ package io.suricate.monitoring.configuration.security.oauth2;
 import io.suricate.monitoring.controllers.api.error.ApiAuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -71,33 +72,35 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()
-            .exceptionHandling()
-            .authenticationEntryPoint(apiAuthenticationFailureHandler)
-            .accessDeniedHandler(apiAuthenticationFailureHandler)
-            .and()
-            .headers()
-            .frameOptions().disable()
-            .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .anonymous()
-            .and()
-            .authorizeRequests()
-            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .antMatchers("/h2-console/**").permitAll()
-            .antMatchers("/api/oauth/token").permitAll()
-            .antMatchers("/api/*/users/register").permitAll()
-            .antMatchers("/api/*/configurations/authentication-provider").permitAll()
-            .antMatchers("/api/*/projects/{projectToken}").permitAll()
-            .antMatchers("/api/*/projects/{projectToken}/projectWidgets").permitAll()
-            .antMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()
-            .antMatchers("/api/*/widgets/{widgetId}").permitAll()
-            .antMatchers("/api/swagger-ui.html").permitAll()
-            .antMatchers("/api/*/settings").permitAll()
-            .antMatchers("/api/*/assets/**").permitAll()
-            .antMatchers("/ws/**").permitAll()
-            .antMatchers("/api/**").authenticated();
+                .csrf().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(apiAuthenticationFailureHandler)
+                .accessDeniedHandler(apiAuthenticationFailureHandler)
+                .and()
+                .headers()
+                .frameOptions().disable()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .anonymous()
+                .and()
+                .authorizeRequests()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/api/oauth/token").permitAll()
+                .antMatchers("/api/*/users/register").permitAll()
+                .antMatchers("/api/*/configurations/authentication-provider").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/*/projects/{projectToken}").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/*/projects/{projectToken}/slides").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/*/project-slides/{projectSlideId}").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/*/project-slides/{projectSlideId}/projectWidgets").permitAll()
+                .antMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()
+                .antMatchers("/api/*/widgets/{widgetId}").permitAll()
+                .antMatchers("/api/swagger-ui.html").permitAll()
+                .antMatchers("/api/*/settings").permitAll()
+                .antMatchers("/api/*/assets/**").permitAll()
+                .antMatchers("/ws/**").permitAll()
+                .antMatchers("/api/**").authenticated();
     }
 }
