@@ -19,12 +19,10 @@ package io.suricate.monitoring.service.mapper;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.entity.project.Project;
-import io.suricate.monitoring.service.api.LibraryService;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -33,14 +31,11 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for project class
  */
 @Component
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        uses = {ProjectSlideMapper.class}
+)
 public abstract class ProjectMapper {
-
-    /**
-     * The library service
-     */
-    @Autowired
-    protected LibraryService libraryService;
 
     /* ************************* TO DTO ********************************************** */
 
@@ -55,11 +50,7 @@ public abstract class ProjectMapper {
      * @return The related project DTO
      */
     @Named("toProjectDtoDefault")
-    @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
-    @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
-    @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
-    @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
-    @Mapping(target = "librariesToken", expression = "java(libraryService.getLibrariesToken(project.getWidgets()))")
+    @Mapping(target = "slides", qualifiedByName = "toProjectSlideDtoDefault")
     public abstract ProjectResponseDto toProjectDtoDefault(Project project);
 
     /* ******************************************************* */
@@ -67,7 +58,7 @@ public abstract class ProjectMapper {
     /* ******************************************************* */
 
     /**
-     * Tranform a list of projects into a list of projectDtos
+     * Transform a list of projects into a list of projectDtos
      *
      * @param projects The list of project to tranform
      * @return The related list of dto object

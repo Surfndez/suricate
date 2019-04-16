@@ -19,7 +19,7 @@ package io.suricate.monitoring.service.mapper;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.service.api.ProjectService;
+import io.suricate.monitoring.service.api.ProjectSlideService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.WidgetService;
 import org.mapstruct.IterableMapping;
@@ -45,10 +45,10 @@ public abstract class ProjectWidgetMapper {
     protected ProjectWidgetService projectWidgetService;
 
     /**
-     * The project service
+     * The project slide service
      */
     @Autowired
-    protected ProjectService projectService;
+    protected ProjectSlideService projectSlideService;
 
     /**
      * The widget service
@@ -75,7 +75,7 @@ public abstract class ProjectWidgetMapper {
     @Mapping(target = "widgetPosition.width", source = "projectWidget.width")
     @Mapping(target = "instantiateHtml", expression = "java(projectWidgetService.instantiateProjectWidgetHtml(projectWidget))")
     @Mapping(target = "backendConfig", expression = "java(projectWidgetService.decryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()))")
-    @Mapping(target = "projectToken", source = "projectWidget.project.token")
+    @Mapping(target = "projectSlideId", source = "projectSlide.id")
     @Mapping(target = "widgetId", source = "projectWidget.widget.id")
     public abstract ProjectWidgetResponseDto toProjectWidgetDtoDefault(ProjectWidget projectWidget);
 
@@ -104,8 +104,8 @@ public abstract class ProjectWidgetMapper {
     @Mapping(target = "row", source = "projectWidgetRequestDto.row")
     @Mapping(target = "height", source = "projectWidgetRequestDto.height")
     @Mapping(target = "width", source = "projectWidgetRequestDto.width")
-    @Mapping(target = "project", expression = "java( projectService.getOneByToken(projectToken).get())")
-    @Mapping(target = "widget", expression = "java( widgetService.findOne(projectWidgetRequestDto.getWidgetId()) )")
     @Mapping(target = "data", source = "projectWidgetRequestDto.data")
-    public abstract ProjectWidget toNewProjectWidget(ProjectWidgetRequestDto projectWidgetRequestDto, String projectToken);
+    @Mapping(target = "projectSlide", expression = "java( projectSlideService.getOneById(projectSlideId).get() )")
+    @Mapping(target = "widget", expression = "java( widgetService.findOne(projectWidgetRequestDto.getWidgetId()) )")
+    public abstract ProjectWidget toNewProjectWidget(ProjectWidgetRequestDto projectWidgetRequestDto, Long projectSlideId);
 }
