@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.model.dto.api.project;
 
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,7 +30,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "ProjectSlideRequest", description = "Describe a slide of a project/dashboard")
-public class ProjectSlideRequestDto {
+public class ProjectSlideRequestDto extends AbstractDto {
 
     /**
      * Number of column in the slide
