@@ -65,6 +65,9 @@ public class NashornWidgetSchedulerTest {
     @Autowired
     ProjectWidgetService projectWidgetService;
 
+    @Autowired
+    ProjectSlideRepository projectSlideRepository;
+
     private ScheduledThreadPoolExecutor scheduledExecutorService;
     private ScheduledThreadPoolExecutor scheduledExecutorServiceFuture;
     private Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>> jobs;
@@ -88,6 +91,7 @@ public class NashornWidgetSchedulerTest {
         // Add project slide
         ProjectSlide projectSlide = new ProjectSlide();
         projectSlide.setProject(project);
+        projectSlideRepository.save(projectSlide);
 
         // Add Category
         Category category = new Category();
