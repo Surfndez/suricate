@@ -55,7 +55,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Project Controller", tags = {"Projects"})
+@Api(value = "Project Slide Controller", tags = {"Project Slides"})
 public class ProjectSlideController {
 
     /**
@@ -298,7 +298,7 @@ public class ProjectSlideController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project slide not found", response = ApiErrorDto.class)
     })
-    @PostMapping(value = "/v1/project-slides/{projectSlideId}/projectWidgets")
+    @PostMapping(value = "/v1/project-slides/{projectSlideId}/project-widgets")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
     public ResponseEntity<ProjectWidgetResponseDto> addProjectWidgetToProjectSlide(@ApiIgnore OAuth2Authentication authentication,
@@ -345,7 +345,7 @@ public class ProjectSlideController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project slide not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/project-slides/{projectSlideId}/projectWidgetPositions")
+    @PutMapping(value = "/v1/project-slides/{projectSlideId}/project-widget-positions")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> updateProjectWidgetsPositionForProject(@ApiIgnore OAuth2Authentication authentication,
                                                                        @ApiParam(name = "projectSlideId", value = "The project slide id", required = true)

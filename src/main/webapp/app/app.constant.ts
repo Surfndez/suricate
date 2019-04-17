@@ -79,10 +79,15 @@ export const configurationsApiEndpoint = `${baseApiEndpoint}/v1/configurations`;
  */
 export const projectsApiEndpoint = `${baseApiEndpoint}/v1/projects`;
 /**
+ * Global endpoint for project slides
+ * @type {string}
+ */
+export const projectSlidesApiEndpoint = `${baseApiEndpoint}/v1/project-slides`;
+/**
  * Global endpoint for project widgets
  * @type {string}
  */
-export const projectWidgetsApiEndpoint = `${baseApiEndpoint}/v1/projectWidgets`;
+export const projectWidgetsApiEndpoint = `${baseApiEndpoint}/v1/project-widgets`;
 /**
  * Global repositories endpoint
  * @type {string}

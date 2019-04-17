@@ -70,7 +70,7 @@ public class ProjectWidgetController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project widget not found", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/v1/projectWidgets/{projectWidgetId}")
+    @GetMapping(value = "/v1/project-widgets/{projectWidgetId}")
     @PermitAll
     public ResponseEntity<ProjectWidgetResponseDto> getProjectWidgetFromProject(@ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
                                                                                 @PathVariable("projectWidgetId") Long projectWidgetId) {
@@ -100,7 +100,7 @@ public class ProjectWidgetController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project widget not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/projectWidgets/{projectWidgetId}")
+    @PutMapping(value = "/v1/project-widgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> editProjectWidgetFromProject(@ApiIgnore OAuth2Authentication authentication,
                                                              @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
@@ -134,7 +134,7 @@ public class ProjectWidgetController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project widget not found", response = ApiErrorDto.class)
     })
-    @DeleteMapping(value = "/v1/projectWidgets/{projectWidgetId}")
+    @DeleteMapping(value = "/v1/project-widgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> deleteProjectWidget(@ApiIgnore OAuth2Authentication authentication,
                                                     @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
