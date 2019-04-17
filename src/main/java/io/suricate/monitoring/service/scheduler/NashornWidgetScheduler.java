@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 @Service
 public class NashornWidgetScheduler implements Schedulable {
@@ -214,10 +215,10 @@ public class NashornWidgetScheduler implements Schedulable {
 
         // Update job
         jobs.put(nashornRequest.getProjectWidgetId(),
-            new ImmutablePair<>(
-                new WeakReference<ScheduledFuture<NashornResponse>>(future),
-                new WeakReference<ScheduledFuture<Void>>(futureResult)
-            ));
+                new ImmutablePair<>(
+                        new WeakReference<ScheduledFuture<NashornResponse>>(future),
+                        new WeakReference<ScheduledFuture<Void>>(futureResult)
+                ));
 
     }
 
@@ -237,9 +238,11 @@ public class NashornWidgetScheduler implements Schedulable {
      * @param project The project
      */
     public void cancelProjectScheduling(final Project project) {
-        project
-            .getWidgets()
-            .forEach(projectWidget -> cancelWidgetInstance(projectWidget.getId()));
+        project.getProjectSlides().stream()
+                .flatMap(projectSlide -> projectSlide.getWidgets().stream())
+                .map(ProjectWidget::getId)
+                .collect(Collectors.toList())
+                .forEach(this::cancelWidgetInstance);
     }
 
     /**

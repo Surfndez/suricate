@@ -24,7 +24,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
-import java.util.Optional;
 
 /**
  * Repository used for request Project widget in database
@@ -36,9 +35,9 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      */
     @Modifying
     @Query("UPDATE ProjectWidget " +
-        "SET    lastSuccessDate = null, " +
-        "log = null," +
-        "state = 'STOPPED'")
+            "SET    lastSuccessDate = null, " +
+            "log = null," +
+            "state = 'STOPPED'")
     void resetProjectWidgetsState();
 
     /**
@@ -53,10 +52,10 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      */
     @Modifying
     @Query("UPDATE ProjectWidget SET row = :row, " +
-        "col = :col, " +
-        "width = :width, " +
-        "height = :height " +
-        "WHERE id = :id")
+            "col = :col, " +
+            "width = :width, " +
+            "height = :height " +
+            "WHERE id = :id")
     int updateRowAndColAndWidthAndHeightById(@Param("row") int row, @Param("col") int col, @Param("width") int width, @Param("height") int height, @Param("id") Long id);
 
     /**
@@ -71,12 +70,12 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      */
     @Modifying
     @Query("UPDATE ProjectWidget " +
-        "SET lastExecutionDate = :lastExecutionDate, " +
-        "lastSuccessDate = :lastExecutionDate," +
-        "state = :state, " +
-        "log = :log, " +
-        "data = :data " +
-        "WHERE id = :id")
+            "SET lastExecutionDate = :lastExecutionDate, " +
+            "lastSuccessDate = :lastExecutionDate," +
+            "state = :state, " +
+            "log = :log, " +
+            "data = :data " +
+            "WHERE id = :id")
     int updateSuccessExecution(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("data") String data, @Param("id") Long id, @Param("state") WidgetState widgetState);
 
     /**
@@ -90,27 +89,18 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      */
     @Modifying
     @Query("UPDATE ProjectWidget " +
-        "SET lastExecutionDate = :lastExecutionDate, " +
-        "state = :state, " +
-        "log = :log " +
-        "WHERE id = :id")
+            "SET lastExecutionDate = :lastExecutionDate, " +
+            "state = :state, " +
+            "log = :log " +
+            "WHERE id = :id")
     int updateExecutionLog(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("id") Long id, @Param("state") WidgetState widgetState);
 
     /**
      * Method used to delete a widget instance by it's id and the project id
      *
-     * @param projectId the project is
-     * @param id        the widget instance id
+     * @param projectSlideId the project slide id
+     * @param id             the widget instance id
      * @return the number of deleted rows
      */
-    Long deleteByProjectIdAndId(Long projectId, Long id);
-
-    /**
-     * Get project Widget Id from id and projectId
-     *
-     * @param projectWidgetId project widget Id
-     * @param projectToken    project token
-     * @return project widget id
-     */
-    Optional<ProjectWidget> findByIdAndProject_Token(Long projectWidgetId, String projectToken);
+    Long deleteByProjectSlideIdAndId(Long projectSlideId, Long id);
 }

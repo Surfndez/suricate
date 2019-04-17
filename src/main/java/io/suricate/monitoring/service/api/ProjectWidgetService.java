@@ -23,7 +23,7 @@ import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.entity.project.Project;
+import io.suricate.monitoring.model.entity.project.ProjectSlide;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
@@ -31,7 +31,7 @@ import io.suricate.monitoring.model.enums.DataType;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
-import io.suricate.monitoring.service.mapper.ProjectMapper;
+import io.suricate.monitoring.service.mapper.ProjectSlideMapper;
 import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.service.scheduler.DashboardScheduleService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
@@ -95,9 +95,9 @@ public class ProjectWidgetService {
     private final MustacheFactory mustacheFactory;
 
     /**
-     * The project mapper used for manage model/dto object
+     * The project slide mapper
      */
-    private final ProjectMapper projectMapper;
+    private final ProjectSlideMapper projectSlideMapper;
 
     /**
      * The application context
@@ -117,7 +117,7 @@ public class ProjectWidgetService {
      * @param dashboardScheduleService  The dashboard scheduler
      * @param widgetService             The widget service
      * @param mustacheFactory           The mustache factory (HTML template)
-     * @param projectMapper             The project mapper
+     * @param projectSlideMapper        The project slide mapper
      * @param ctx                       The application context
      * @param stringEncryptor           The string encryptor
      */
@@ -127,7 +127,7 @@ public class ProjectWidgetService {
                                 final DashboardWebSocketService dashboardWebSocketService,
                                 @Lazy final DashboardScheduleService dashboardScheduleService,
                                 final WidgetService widgetService,
-                                final ProjectMapper projectMapper,
+                                final ProjectSlideMapper projectSlideMapper,
                                 final ApplicationContext ctx,
                                 @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
         this.projectWidgetRepository = projectWidgetRepository;
@@ -135,7 +135,7 @@ public class ProjectWidgetService {
         this.dashboardScheduleService = dashboardScheduleService;
         this.widgetService = widgetService;
         this.mustacheFactory = mustacheFactory;
-        this.projectMapper = projectMapper;
+        this.projectSlideMapper = projectSlideMapper;
         this.ctx = ctx;
         this.stringEncryptor = stringEncryptor;
     }
@@ -179,7 +179,7 @@ public class ProjectWidgetService {
     public ProjectWidget addProjectWidget(ProjectWidget projectWidget) {
         //Encrypt Secret params
         projectWidget.setBackendConfig(
-            encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig())
+                encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig())
         );
 
         // Add project widget
@@ -188,8 +188,8 @@ public class ProjectWidgetService {
 
         // Update grid
         UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
-        updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProject().getToken(), updateEvent);
+        updateEvent.setContent(projectSlideMapper.toProjectSlideDtoDefault(projectWidget.getProjectSlide()));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProjectSlide().getProject().getToken(), updateEvent);
 
         return projectWidget;
     }
@@ -210,25 +210,26 @@ public class ProjectWidgetService {
     /**
      * Method used to update all widgets positions for a current project
      *
-     * @param project   the project to update
-     * @param positions lit of position
+     * @param projectSlide the project slide to update
+     * @param positions    list of position
      */
     @Transactional
-    public void updateWidgetPositionByProject(Project project, final List<ProjectWidgetPositionRequestDto> positions) {
+    public void updateWidgetPositionByProjectSlide(ProjectSlide projectSlide, final List<ProjectWidgetPositionRequestDto> positions) {
         for (ProjectWidgetPositionRequestDto projectWidgetPositionRequestDto : positions) {
             updateWidgetPositionByProjectWidgetId(
-                projectWidgetPositionRequestDto.getProjectWidgetId(),
-                projectWidgetPositionRequestDto.getCol(),
-                projectWidgetPositionRequestDto.getRow(),
-                projectWidgetPositionRequestDto.getHeight(),
-                projectWidgetPositionRequestDto.getWidth()
+                    projectWidgetPositionRequestDto.getProjectWidgetId(),
+                    projectWidgetPositionRequestDto.getCol(),
+                    projectWidgetPositionRequestDto.getRow(),
+                    projectWidgetPositionRequestDto.getHeight(),
+                    projectWidgetPositionRequestDto.getWidth()
             );
         }
         projectWidgetRepository.flush();
+
         // notify clients
         UpdateEvent updateEvent = new UpdateEvent(UpdateType.POSITION);
-        updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), updateEvent);
+        updateEvent.setContent(projectSlideMapper.toProjectSlideDtoDefault(projectSlide));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(projectSlide.getProject().getToken(), updateEvent);
     }
 
     /**
@@ -237,19 +238,20 @@ public class ProjectWidgetService {
      * @param projectWidgetId the projectWidgetId id
      */
     @Transactional
-    public void removeWidgetFromDashboard(Long projectWidgetId) {
+    public void removeWidgetFromSlide(Long projectWidgetId) {
         Optional<ProjectWidget> projectWidgetOptional = this.getOne(projectWidgetId);
 
         if (projectWidgetOptional.isPresent()) {
+            ProjectWidget projectWidget = projectWidgetOptional.get();
             ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidgetId);
 
-            projectWidgetRepository.deleteByProjectIdAndId(projectWidgetOptional.get().getProject().getId(), projectWidgetId);
+            projectWidgetRepository.deleteByProjectSlideIdAndId(projectWidget.getProjectSlide().getId(), projectWidgetId);
             projectWidgetRepository.flush();
 
             // notify client
             UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
-            updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidgetOptional.get().getProject()));
-            dashboardWebsocketService.updateGlobalScreensByProjectId(projectWidgetOptional.get().getProject().getId(), updateEvent);
+            updateEvent.setContent(projectSlideMapper.toProjectSlideDtoDefault(projectWidget.getProjectSlide()));
+            dashboardWebsocketService.updateGlobalScreensByProjectId(projectWidget.getProjectSlide().getProject().getId(), updateEvent);
         }
     }
 
@@ -311,9 +313,9 @@ public class ProjectWidgetService {
         if (StringUtils.isNotEmpty(projectWidget.getData())) {
             try {
                 map = objectMapper.readValue(
-                    projectWidget.getData(),
-                    new TypeReference<Map<String, Object>>() {
-                    }
+                        projectWidget.getData(),
+                        new TypeReference<Map<String, Object>>() {
+                        }
                 );
                 // Add backend config
                 map.putAll(PropertiesUtils.getMap(projectWidget.getBackendConfig()));
@@ -360,17 +362,16 @@ public class ProjectWidgetService {
         }
         if (backendConfig != null) {
             projectWidget.setBackendConfig(
-                encryptSecretParamsIfNeeded(projectWidget.getWidget(), backendConfig)
+                    encryptSecretParamsIfNeeded(projectWidget.getWidget(), backendConfig)
             );
         }
         projectWidgetRepository.save(projectWidget);
-
         dashboardScheduleService.scheduleWidget(projectWidget.getId());
 
         // notify client
         UpdateEvent updateEvent = new UpdateEvent(UpdateType.WIDGET);
-        updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
-        dashboardWebsocketService.updateGlobalScreensByProjectTokenAndProjectWidgetId(projectWidget.getProject().getToken(), projectWidget.getId(), updateEvent);
+        updateEvent.setContent(projectSlideMapper.toProjectSlideDtoDefault(projectWidget.getProjectSlide()));
+        dashboardWebsocketService.updateGlobalScreensByProjectTokenAndProjectWidgetId(projectWidget.getProjectSlide().getProject().getToken(), projectWidget.getId(), updateEvent);
     }
 
     /**
@@ -420,10 +421,10 @@ public class ProjectWidgetService {
         }
 
         return backendConfigAsMap
-            .entrySet()
-            .stream()
-            .map(backendConfigEntrySet -> backendConfigEntrySet.getKey() + "=" + backendConfigEntrySet.getValue())
-            .collect(Collectors.joining("\n"));
+                .entrySet()
+                .stream()
+                .map(backendConfigEntrySet -> backendConfigEntrySet.getKey() + "=" + backendConfigEntrySet.getValue())
+                .collect(Collectors.joining("\n"));
     }
 
     /**
@@ -448,9 +449,9 @@ public class ProjectWidgetService {
         }
 
         return backendConfigAsMap
-            .entrySet()
-            .stream()
-            .map(backendConfigEntrySet -> backendConfigEntrySet.getKey() + "=" + backendConfigEntrySet.getValue())
-            .collect(Collectors.joining("\n"));
+                .entrySet()
+                .stream()
+                .map(backendConfigEntrySet -> backendConfigEntrySet.getKey() + "=" + backendConfigEntrySet.getValue())
+                .collect(Collectors.joining("\n"));
     }
 }

@@ -3,6 +3,7 @@ package io.suricate.monitoring.service.scheduler;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.entity.project.Project;
+import io.suricate.monitoring.model.entity.project.ProjectSlide;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
@@ -84,6 +85,10 @@ public class NashornWidgetSchedulerTest {
         project.setToken("999999");
         projectRepository.save(project);
 
+        // Add project slide
+        ProjectSlide projectSlide = new ProjectSlide();
+        projectSlide.setProject(project);
+
         // Add Category
         Category category = new Category();
         category.setName("Test");
@@ -98,7 +103,7 @@ public class NashornWidgetSchedulerTest {
         // Add widget Instance
         projectWidget = new ProjectWidget();
         projectWidget.setState(WidgetState.STOPPED);
-        projectWidget.setProject(project);
+        projectWidget.setProjectSlide(projectSlide);
         projectWidget.setWidget(widget);
         projectWidget.setData("{}");
         projectWidgetRepository.save(projectWidget);

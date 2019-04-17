@@ -70,11 +70,10 @@ public class NashornService {
      */
     @Transactional
     public List<NashornRequest> getNashornRequestsByProject(final Project project) {
-        return project
-            .getWidgets()
-            .stream()
-            .map(this::createNashornRequestByProjectWidget)
-            .collect(Collectors.toList());
+        return project.getProjectSlides().stream()
+                .flatMap(projectSlide -> projectSlide.getWidgets().stream())
+                .map(this::createNashornRequestByProjectWidget)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -98,7 +97,7 @@ public class NashornService {
         String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget, projectWidget.getWidget().getCategory().getConfigurations());
         String script = projectWidget.getWidget().getBackendJs();
         String previousData = projectWidget.getData();
-        Long projectId = projectWidget.getProject().getId();
+        Long projectId = projectWidget.getProjectSlide().getProject().getId();
         Long technicalId = projectWidget.getId();
         Long delay = projectWidget.getWidget().getDelay();
         Long timeout = projectWidget.getWidget().getTimeout();
@@ -143,10 +142,10 @@ public class NashornService {
             for (Configuration configuration : configurations) {
                 if (!projectWidget.getBackendConfig().contains(configuration.getKey())) {
                     builder
-                        .append(configuration.getKey())
-                        .append('=')
-                        .append(configuration.getValue())
-                        .append('\n');
+                            .append(configuration.getKey())
+                            .append('=')
+                            .append(configuration.getValue())
+                            .append('\n');
                 }
             }
         }

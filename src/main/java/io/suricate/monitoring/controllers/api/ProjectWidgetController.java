@@ -112,7 +112,7 @@ public class ProjectWidgetController {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
 
-        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProject(), authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProjectSlide().getProject(), authentication.getUserAuthentication())) {
             throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -144,11 +144,11 @@ public class ProjectWidgetController {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
 
-        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProject(), authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProjectSlide().getProject(), authentication.getUserAuthentication())) {
             throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        projectWidgetService.removeWidgetFromDashboard(projectWidgetId);
+        projectWidgetService.removeWidgetFromSlide(projectWidgetId);
         return ResponseEntity.noContent().build();
     }
 }

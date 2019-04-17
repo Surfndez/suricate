@@ -118,10 +118,10 @@ public class ProjectSlideController {
      */
     @ApiOperation(value = "Retrieve a project slide by id", response = ProjectSlideResponseDto.class, nickname = "getSlideById")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ProjectSlideResponseDto.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok", response = ProjectSlideResponseDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/project-slides/{projectSlideId}")
     @Transactional
@@ -133,9 +133,9 @@ public class ProjectSlideController {
         }
 
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectSlideMapper.toProjectSlideDtoDefault(projectSlideOptional.get()));
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectSlideMapper.toProjectSlideDtoDefault(projectSlideOptional.get()));
     }
 
     /**
@@ -144,20 +144,20 @@ public class ProjectSlideController {
      * @param authentication         The connected user
      * @param projectSlideRequestDto Project slide request dto
      */
-    @ApiOperation(value = "Update a slide to a project")
+    @ApiOperation(value = "Update a slide")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/project-slides/{projectSlideId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> addSlideToProject(@ApiIgnore OAuth2Authentication authentication,
-                                                  @ApiParam(name = "projectSlideId", value = "The project slide id", required = true)
-                                                  @PathVariable("projectSlideId") Long projectSlideId,
-                                                  @ApiParam(name = "projectSlideRequestDto", value = "The slide to update", required = true)
-                                                  @RequestBody ProjectSlideRequestDto projectSlideRequestDto) {
+    public ResponseEntity<Void> updateSlide(@ApiIgnore OAuth2Authentication authentication,
+                                            @ApiParam(name = "projectSlideId", value = "The project slide id", required = true)
+                                            @PathVariable("projectSlideId") Long projectSlideId,
+                                            @ApiParam(name = "projectSlideRequestDto", value = "The slide to update", required = true)
+                                            @RequestBody ProjectSlideRequestDto projectSlideRequestDto) {
 
         Optional<ProjectSlide> projectSlideOptional = projectSlideService.getOneById(projectSlideId);
         if (!projectSlideOptional.isPresent()) {
@@ -170,10 +170,10 @@ public class ProjectSlideController {
         }
 
         projectSlideService.updateSlide(
-                projectSlide,
-                projectSlideRequestDto.getMaxColumn(),
-                projectSlideRequestDto.getWidgetHeight(),
-                projectSlideRequestDto.getCssStyle()
+            projectSlide,
+            projectSlideRequestDto.getMaxColumn(),
+            projectSlideRequestDto.getWidgetHeight(),
+            projectSlideRequestDto.getCssStyle()
         );
         return ResponseEntity.ok().build();
     }
@@ -186,10 +186,10 @@ public class ProjectSlideController {
      */
     @ApiOperation(value = "Delete a slide")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Slide deleted"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 204, message = "Slide deleted"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @DeleteMapping(value = "/v1/project-slides/{projectSlideId}")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -217,10 +217,10 @@ public class ProjectSlideController {
      */
     @ApiOperation(value = "Add/Update a project slide screenshot")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Screenshot updated"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project slide not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 204, message = "Screenshot updated"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project slide not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/project-slides/{projectSlideId}/screenshot")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -259,12 +259,12 @@ public class ProjectSlideController {
      */
     @ApiOperation(value = "Get the full list of project widgets for a project slide", response = ProjectWidgetResponseDto.class, nickname = "getProjectWidgetsForProjectSlide")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ProjectWidgetResponseDto.class, responseContainer = "List"),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok", response = ProjectWidgetResponseDto.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/v1/project-slides/{projectSlideId}/projectWidgets")
+    @GetMapping(value = "/v1/project-slides/{projectSlideId}/project-widgets")
     @Transactional
     public ResponseEntity<List<ProjectWidgetResponseDto>> getProjectWidgetsForProjectSlide(@ApiParam(name = "projectSlideId", value = "The project slide id", required = true)
                                                                                            @PathVariable("projectSlideId") Long projectSlideId) {
@@ -279,9 +279,9 @@ public class ProjectSlideController {
         }
 
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectWidgetMapper.toProjectWidgetDtosDefault(projectSlide.getWidgets()));
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectWidgetMapper.toProjectWidgetDtosDefault(projectSlide.getWidgets()));
     }
 
     /**
@@ -293,10 +293,10 @@ public class ProjectSlideController {
      */
     @ApiOperation(value = "Add a new widget to a project slide", response = ProjectWidgetResponseDto.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ProjectWidgetResponseDto.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project slide not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok", response = ProjectWidgetResponseDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project slide not found", response = ApiErrorDto.class)
     })
     @PostMapping(value = "/v1/project-slides/{projectSlideId}/projectWidgets")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -320,15 +320,15 @@ public class ProjectSlideController {
         projectWidgetService.addProjectWidget(projectWidget);
 
         URI resourceLocation = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/api/projectWidgets/" + projectWidget.getId())
-                .build()
-                .toUri();
+            .fromCurrentContextPath()
+            .path("/api/projectWidgets/" + projectWidget.getId())
+            .build()
+            .toUri();
 
         return ResponseEntity
-                .created(resourceLocation)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectWidgetMapper.toProjectWidgetDtoDefault(projectWidget));
+            .created(resourceLocation)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectWidgetMapper.toProjectWidgetDtoDefault(projectWidget));
     }
 
     /**
@@ -340,10 +340,10 @@ public class ProjectSlideController {
      */
     @ApiOperation(value = "Update the project widget positions for a Slide")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Widget position updated"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project slide not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 204, message = "Widget position updated"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project slide not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/project-slides/{projectSlideId}/projectWidgetPositions")
     @PreAuthorize("hasRole('ROLE_USER')")

@@ -16,11 +16,16 @@
 
 package io.suricate.monitoring.service.api;
 
+import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectSlide;
 import io.suricate.monitoring.repository.ProjectSlideRepository;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -34,6 +39,10 @@ public class ProjectSlideService {
      */
     private final ProjectSlideRepository projectSlideRepository;
 
+    /**
+     * The asset service
+     */
+    private final AssetService assetService;
 
     /**
      * Constructor
@@ -41,8 +50,10 @@ public class ProjectSlideService {
      * @param projectSlideRepository The project slide repository to inject
      */
     @Autowired
-    public ProjectSlideService(final ProjectSlideRepository projectSlideRepository) {
+    public ProjectSlideService(final ProjectSlideRepository projectSlideRepository,
+                               final AssetService assetService) {
         this.projectSlideRepository = projectSlideRepository;
+        this.assetService = assetService;
     }
 
     /**
@@ -57,5 +68,76 @@ public class ProjectSlideService {
         }
 
         return Optional.empty();
+    }
+
+
+    /**
+     * Add a slide to a project
+     *
+     * @param project      The project
+     * @param maxColumn    The number of column in the slide
+     * @param widgetHeight The widget height in px inside the slide
+     * @param cssStyle     The css style
+     */
+    public void addSlideToProject(final Project project, final Integer maxColumn, final Integer widgetHeight, final String cssStyle) {
+        ProjectSlide projectSlide = new ProjectSlide();
+        projectSlide.setProject(project);
+        projectSlide.setMaxColumn(maxColumn);
+        projectSlide.setWidgetHeight(widgetHeight);
+        projectSlide.setCssStyle(cssStyle);
+
+        projectSlideRepository.save(projectSlide);
+    }
+
+    /**
+     * Update a slide to a project
+     *
+     * @param maxColumn    The number of column in the slide
+     * @param widgetHeight The widget height in px inside the slide
+     * @param cssStyle     The css style
+     */
+    public void updateSlide(final ProjectSlide projectSlide, final Integer maxColumn, final Integer widgetHeight, final String cssStyle) {
+        if (maxColumn != null) {
+            projectSlide.setMaxColumn(maxColumn);
+        }
+        if (widgetHeight != null) {
+            projectSlide.setWidgetHeight(widgetHeight);
+        }
+        if (StringUtils.isNotBlank(cssStyle)) {
+            projectSlide.setCssStyle(cssStyle);
+        }
+
+        projectSlideRepository.save(projectSlide);
+    }
+
+    /**
+     * Delete a project slide
+     *
+     * @param projectSlideId The project slide
+     */
+    public void deleteSlide(final Long projectSlideId) {
+        projectSlideRepository.deleteById(projectSlideId);
+    }
+
+    /**
+     * Add or update a screenshot for a project
+     *
+     * @param projectSlide The project slide
+     * @param screenshot   The screenshot to add
+     */
+    public void addOrUpdateScreenshot(final ProjectSlide projectSlide, final MultipartFile screenshot) throws IOException {
+        Asset screenshotAsset = new Asset();
+        screenshotAsset.setContent(screenshot.getBytes());
+        screenshotAsset.setContentType(screenshot.getContentType());
+        screenshotAsset.setSize(screenshot.getSize());
+
+        if (projectSlide.getScreenshot() != null) {
+            screenshotAsset.setId(projectSlide.getScreenshot().getId());
+            assetService.save(screenshotAsset);
+        } else {
+            assetService.save(screenshotAsset);
+            projectSlide.setScreenshot(screenshotAsset);
+            projectSlideRepository.save(projectSlide);
+        }
     }
 }

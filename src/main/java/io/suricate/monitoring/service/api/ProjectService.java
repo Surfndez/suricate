@@ -17,7 +17,6 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.UpdateType;
@@ -31,10 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,28 +58,20 @@ public class ProjectService {
     private final DashboardWebSocketService dashboardWebsocketService;
 
     /**
-     * The asset service to inject
-     */
-    private final AssetService assetService;
-
-    /**
      * Constructor
      *
      * @param stringEncryptor           The string encryptor to inject
      * @param projectRepository         The project repository to inject
      * @param dashboardWebSocketService The dashboard web socket service to inject
-     * @param assetService              The asset service
      */
     @Autowired
     public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                           final ProjectRepository projectRepository,
-                          final DashboardWebSocketService dashboardWebSocketService,
-                          final AssetService assetService) {
+                          final DashboardWebSocketService dashboardWebSocketService) {
 
         this.stringEncryptor = stringEncryptor;
         this.projectRepository = projectRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
-        this.assetService = assetService;
     }
 
     public List<Project> getAll() {
@@ -98,16 +87,6 @@ public class ProjectService {
     @Transactional
     public List<Project> getAllByUser(User user) {
         return projectRepository.findByUsers_IdOrderByName(user.getId());
-    }
-
-    /**
-     * Test if the project exists by token
-     *
-     * @param token The project token
-     * @return True the project exists false otherwise
-     */
-    public boolean isProjectExists(final String token) {
-        return this.getOneByToken(token).isPresent();
     }
 
     /**
@@ -154,33 +133,16 @@ public class ProjectService {
     /**
      * Method used to update a project
      *
-     * @param project      the project to update
-     * @param newName      the new name
-     * @param widgetHeight The new widget height
-     * @param maxColumn    The new max column
+     * @param project the project to update
+     * @param newName the new name
      */
     @Transactional
-    public void updateProject(Project project,
-                              final String newName,
-                              final int widgetHeight,
-                              final int maxColumn,
-                              final String customCss) {
+    public void updateProject(final Project project, final String newName) {
         if (StringUtils.isNotBlank(newName)) {
             project.setName(newName);
         }
-        if (widgetHeight > 0) {
-            project.setWidgetHeight(widgetHeight);
-        }
-        if (maxColumn > 0) {
-            project.setMaxColumn(maxColumn);
-        }
-
-        if (StringUtils.isNotBlank(customCss)) {
-            project.setCssStyle(customCss);
-        }
 
         projectRepository.save(project);
-        // Update grid
         dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.GRID));
     }
 
@@ -228,7 +190,7 @@ public class ProjectService {
      */
     public boolean isConnectedUserCanAccessToProject(final Project project, final Authentication authentication) {
         return SecurityUtils.isAdmin(authentication)
-            || project.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(authentication.getName()));
+                || project.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(authentication.getName()));
     }
 
     /**
@@ -242,27 +204,5 @@ public class ProjectService {
         dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.DISCONNECT));
         // delete project
         projectRepository.delete(project);
-    }
-
-    /**
-     * Add or update a screenshot for a project
-     *
-     * @param project    The project
-     * @param screenshot The screenshot to add
-     */
-    public void addOrUpdateScreenshot(Project project, MultipartFile screenshot) throws IOException {
-        Asset screenshotAsset = new Asset();
-        screenshotAsset.setContent(screenshot.getBytes());
-        screenshotAsset.setContentType(screenshot.getContentType());
-        screenshotAsset.setSize(screenshot.getSize());
-
-        if (project.getScreenshot() != null) {
-            screenshotAsset.setId(project.getScreenshot().getId());
-            assetService.save(screenshotAsset);
-        } else {
-            assetService.save(screenshotAsset);
-            project.setScreenshot(screenshotAsset);
-            projectRepository.save(project);
-        }
     }
 }

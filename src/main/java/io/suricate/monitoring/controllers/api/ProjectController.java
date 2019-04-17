@@ -135,27 +135,26 @@ public class ProjectController {
      */
     @ApiOperation(value = "Get the full list of projects", response = ProjectResponseDto.class, nickname = "getAllProjects")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class, responseContainer = "List"),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping("/v1/projects")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
     public ResponseEntity<List<ProjectResponseDto>> getAll() {
-
         return Optional
-                .ofNullable(projectService.getAll())
-                .map(projects ->
-                        ResponseEntity
-                                .ok()
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .body(projectMapper.toProjectDtosDefault(projects))
-                )
-                .orElseGet(() -> {
-                    throw new NoContentException(Project.class);
-                });
+            .ofNullable(projectService.getAll())
+            .map(projects ->
+                ResponseEntity
+                    .ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(projectMapper.toProjectDtosDefault(projects))
+            )
+            .orElseGet(() -> {
+                throw new NoContentException(Project.class);
+            });
     }
 
     /**
@@ -166,11 +165,11 @@ public class ProjectController {
      */
     @ApiOperation(value = "Get the list of projects related to the current user", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class, responseContainer = "List"),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/projects/currentUser")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -187,9 +186,9 @@ public class ProjectController {
         }
 
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectMapper.toProjectDtosDefault(projects));
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectMapper.toProjectDtosDefault(projects));
     }
 
     /**
@@ -200,10 +199,10 @@ public class ProjectController {
      */
     @ApiOperation(value = "Retrieve the project information by token", response = ProjectResponseDto.class, nickname = "getProjectById")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/projects/{projectToken}")
     @Transactional
@@ -215,9 +214,9 @@ public class ProjectController {
         }
 
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
     }
 
     /**
@@ -229,10 +228,10 @@ public class ProjectController {
      */
     @ApiOperation(value = "Create a new project for the current user", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
     })
     @PostMapping(value = "/v1/projects")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -247,15 +246,15 @@ public class ProjectController {
         Project project = projectService.createProject(userOptional.get(), projectMapper.toNewProject(projectRequestDto));
 
         URI resourceLocation = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/api/projects/" + project.getToken())
-                .build()
-                .toUri();
+            .fromCurrentContextPath()
+            .path("/api/projects/" + project.getToken())
+            .build()
+            .toUri();
 
         return ResponseEntity
-                .created(resourceLocation)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectMapper.toProjectDtoDefault(project));
+            .created(resourceLocation)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectMapper.toProjectDtoDefault(project));
     }
 
     /**
@@ -268,10 +267,10 @@ public class ProjectController {
      */
     @ApiOperation(value = "Update an existing project by the project token")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Project updated"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 204, message = "Project updated"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/projects/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -305,10 +304,10 @@ public class ProjectController {
      */
     @ApiOperation(value = "Delete a project by the project token")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Project deleted"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 204, message = "Project deleted"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -340,9 +339,9 @@ public class ProjectController {
      */
     @ApiOperation(value = "Retrieve project users", response = UserResponseDto.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class, responseContainer = "List"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class, responseContainer = "List"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/projects/{projectToken}/users")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -355,9 +354,9 @@ public class ProjectController {
         }
 
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(userMapper.toUserDtosDefault(projectOptional.get().getUsers()));
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(userMapper.toUserDtosDefault(projectOptional.get().getUsers()));
     }
 
     /**
@@ -370,11 +369,11 @@ public class ProjectController {
      */
     @ApiOperation(value = "Add a user to a project")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
     @PostMapping(value = "/v1/projects/{projectToken}/users")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -413,11 +412,11 @@ public class ProjectController {
      */
     @ApiOperation(value = "Delete a user from a project")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "User removed from project"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 204, message = "User removed from project"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}/users/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -456,10 +455,10 @@ public class ProjectController {
      */
     @ApiOperation(value = "Retrieve the list of project slides", response = ProjectSlideResponseDto.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ProjectSlideResponseDto.class, responseContainer = "List"),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok", response = ProjectSlideResponseDto.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/projects/{projectToken}/slides")
     @Transactional
@@ -475,9 +474,9 @@ public class ProjectController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectSlideMapper.toProjectSlideDtosDefault(projectOptional.get().getProjectSlides()));
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectSlideMapper.toProjectSlideDtosDefault(projectOptional.get().getProjectSlides()));
     }
 
     /**
@@ -489,10 +488,10 @@ public class ProjectController {
      */
     @ApiOperation(value = "Add a slide to a project")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @PostMapping(value = "/v1/projects/{projectToken}/slides")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -513,10 +512,10 @@ public class ProjectController {
         }
 
         projectSlideService.addSlideToProject(
-                projectOptional.get(),
-                projectSlideRequestDto.getMaxColumn(),
-                projectSlideRequestDto.getWidgetHeight(),
-                projectSlideRequestDto.getCssStyle()
+            projectOptional.get(),
+            projectSlideRequestDto.getMaxColumn(),
+            projectSlideRequestDto.getWidgetHeight(),
+            projectSlideRequestDto.getCssStyle()
         );
         return ResponseEntity.ok().build();
     }
@@ -532,9 +531,9 @@ public class ProjectController {
      */
     @ApiOperation(value = "Retrieve connected websocket clients for a project", response = WebsocketClient.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = WebsocketClient.class, responseContainer = "List"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(code = 200, message = "Ok", response = WebsocketClient.class, responseContainer = "List"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/projects/{projectToken}/websocket/clients")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -547,8 +546,8 @@ public class ProjectController {
         }
 
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(dashboardWebSocketService.getWebsocketClientsByProjectToken(projectToken));
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(dashboardWebSocketService.getWebsocketClientsByProjectToken(projectToken));
     }
 }

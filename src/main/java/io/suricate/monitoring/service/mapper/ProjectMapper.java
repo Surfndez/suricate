@@ -32,10 +32,10 @@ import java.util.List;
  */
 @Component
 @Mapper(
-        componentModel = "spring",
-        uses = {
-                ProjectSlideMapper.class
-        }
+    componentModel = "spring",
+    uses = {
+        ProjectSlideMapper.class
+    }
 )
 public abstract class ProjectMapper {
 
@@ -52,7 +52,7 @@ public abstract class ProjectMapper {
      * @return The related project DTO
      */
     @Named("toProjectDtoDefault")
-    @Mapping(target = "slides", qualifiedByName = "toProjectSlideDtoDefault")
+    @Mapping(target = "slides", source = "project.projectSlides", qualifiedByName = "toProjectSlideDtosDefault")
     public abstract ProjectResponseDto toProjectDtoDefault(Project project);
 
     /* ******************************************************* */

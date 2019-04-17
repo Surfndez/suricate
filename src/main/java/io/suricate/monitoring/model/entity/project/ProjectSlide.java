@@ -19,8 +19,9 @@ package io.suricate.monitoring.model.entity.project;
 
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.model.entity.user.User;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -80,7 +81,7 @@ public class ProjectSlide extends AbstractAuditingEntity<Long> {
     /**
      * The list of widgets related to it
      */
-    @OneToMany(mappedBy = "project_slide", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "projectSlide", cascade = CascadeType.REMOVE)
     @OrderBy("row ASC, col ASC")
     private List<ProjectWidget> widgets = new ArrayList<>();
 }
