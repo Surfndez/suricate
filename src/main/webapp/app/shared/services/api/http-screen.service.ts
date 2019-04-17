@@ -26,56 +26,56 @@ import {screensApiEndpoint} from '../../../app.constant';
 @Injectable()
 export class HttpScreenService {
 
-  /**
-   * The constructor
-   *
-   * @param {HttpClient} httpClient The http client service
-   */
-  constructor(private httpClient: HttpClient) {
-  }
+    /**
+     * The constructor
+     *
+     * @param {HttpClient} httpClient The http client service
+     */
+    constructor(private httpClient: HttpClient) {
+    }
 
-  /**
-   * Send the notification for connect a new tv to this dashboard
-   *
-   * @param {string} projectToken The project token to connect
-   * @param {number} screenCode The tv screen code
-   */
-  connectProjectToScreen(projectToken: string, screenCode: number): Observable<void> {
-    const url = `${screensApiEndpoint}/${projectToken}/connect?screenCode=${screenCode}`;
+    /**
+     * Send the notification for connect a new tv to this dashboard
+     *
+     * @param {string} projectToken The project token to connect
+     * @param {number} screenCode The tv screen code
+     */
+    connectProjectToScreen(projectToken: string, screenCode: number): Observable<void> {
+        const url = `${screensApiEndpoint}/${projectToken}/connect?screenCode=${screenCode}`;
 
-    return this.httpClient.get<void>(url);
-  }
+        return this.httpClient.get<void>(url);
+    }
 
-  /**
-   * Send the notification to disconnect a tv for this dashboard
-   *
-   * @param {string} projectToken The project token
-   * @param {number} screenCode The screen to disconnect
-   */
-  disconnectScreen(projectToken: string, screenCode: number): Observable<void> {
-    const url = `${screensApiEndpoint}/${projectToken}/disconnect?screenCode=${screenCode}`;
+    /**
+     * Send the notification to disconnect a tv for this dashboard
+     *
+     * @param {string} projectToken The project token
+     * @param {number} screenCode The screen to disconnect
+     */
+    disconnectScreen(projectToken: string, screenCode: number): Observable<void> {
+        const url = `${screensApiEndpoint}/${projectToken}/disconnect?screenCode=${screenCode}`;
 
-    return this.httpClient.get<void>(url);
-  }
+        return this.httpClient.get<void>(url);
+    }
 
-  /**
-   * Refresh every screens for a project token
-   *
-   * @param {string} projectToken The project token to refresh
-   */
-  refreshEveryConnectedScreensForProject(projectToken: string): Observable<void> {
-    const url = `${screensApiEndpoint}/${projectToken}/refresh`;
+    /**
+     * Refresh every screens for a project token
+     *
+     * @param {string} projectToken The project token to refresh
+     */
+    refreshEveryConnectedScreensForProject(projectToken: string): Observable<void> {
+        const url = `${screensApiEndpoint}/${projectToken}/refresh`;
 
-    return this.httpClient.get<void>(url);
-  }
+        return this.httpClient.get<void>(url);
+    }
 
-  /**
-   * Display the screen code on every connected screens
-   * @param {string} projectToken The project token
-   */
-  displayScreenCodeEveryConnectedScreensForProject(projectToken: string): Observable<void> {
-    const url = `${screensApiEndpoint}/${projectToken}/showscreencode`;
+    /**
+     * Display the screen code on every connected screens
+     * @param {string} projectToken The project token
+     */
+    displayScreenCodeEveryConnectedScreensForProject(projectToken: string): Observable<void> {
+        const url = `${screensApiEndpoint}/${projectToken}/show-screen-code`;
 
-    return this.httpClient.get<void>(url);
-  }
+        return this.httpClient.get<void>(url);
+    }
 }

@@ -171,7 +171,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/v1/projects/currentUser")
+    @GetMapping(value = "/v1/projects/current-user")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
     public ResponseEntity<List<ProjectResponseDto>> getAllForCurrentUser(@ApiIgnore Principal principal) {
