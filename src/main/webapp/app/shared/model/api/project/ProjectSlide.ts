@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+import {ProjectSlideGrid} from "./ProjectSlideGrid";
+
 /**
- * The project request
+ * The project slide entity
  */
-export interface ProjectRequest {
-    name: string;
+export interface ProjectSlide {
+    id: number;
+    gridProperties: ProjectSlideGrid;
+    screenshotToken: string;
+    librariesToken: string[];
+    projectToken: string;
 }

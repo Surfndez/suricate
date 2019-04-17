@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-export interface ProjectGrid {
-  maxColumn: number;
-  widgetHeight: number;
-  cssStyle: string;
+/**
+ * The project slide entity
+ */
+export interface ProjectSlideRequest {
+    maxColumn: number;
+    widgetHeight: number;
+    cssStyle: string;
 }

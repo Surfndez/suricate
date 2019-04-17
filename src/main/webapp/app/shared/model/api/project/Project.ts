@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-import {ProjectGrid} from './ProjectGrid';
+import {ProjectSlide} from "./ProjectSlide";
 
 /**
  * The project entity
  */
 export interface Project {
-  token: string;
-  name: string;
-  gridProperties: ProjectGrid;
-  screenshotToken: string;
-  librariesToken: string[];
+    token: string;
+    name: string;
+    slides: ProjectSlide[];
 }

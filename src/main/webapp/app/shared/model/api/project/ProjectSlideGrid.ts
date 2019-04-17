@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * The project request
- */
-export interface ProjectRequest {
-    name: string;
+export interface ProjectSlideGrid {
+    maxColumn: number;
+    widgetHeight: number;
+    cssStyle: string;
 }

@@ -24,17 +24,16 @@ import {WidgetStateEnum} from '../../enums/WidgetSateEnum';
  * The project widget entity
  */
 export interface ProjectWidget {
-  id: number;
-  data: string;
-  widgetPosition: ProjectWidgetPosition;
-  customStyle: string;
-  instantiateHtml: string;
-  backendConfig: string;
-  log: string;
-  lastExecutionDate: string;
-  lastSuccessDate: string;
-  globalConfigOverridden: boolean;
-  state: WidgetStateEnum;
-  projectToken: string;
-  widgetId: number;
+    id: number;
+    data: string;
+    widgetPosition: ProjectWidgetPosition;
+    customStyle: string;
+    instantiateHtml: string;
+    backendConfig: string;
+    log: string;
+    lastExecutionDate: string;
+    lastSuccessDate: string;
+    state: WidgetStateEnum;
+    projectSlideId: number;
+    widgetId: number;
 }
