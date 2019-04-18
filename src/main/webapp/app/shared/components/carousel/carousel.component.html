@@ -1,0 +1,7 @@
+<div *carousel="let carouselItem from carouselItems autoplay 'on'; let ctrl = controller;">
+  <button (click)="ctrl.prev()">Previous</button>
+  <button (click)="ctrl.next()">Next</button>
+
+  <template [ngTemplateOutlet]="carouselTemplate"
+            [ngTemplateOutletContext]="{carouselItem: carouselItem}"></template>
+</div>

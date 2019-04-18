@@ -59,6 +59,8 @@ import {InputComponent} from './components/form/inputs/input.component';
 import {CheckboxComponent} from './components/form/inputs/checkbox/checkbox.component';
 import {FileInputComponent} from './components/form/inputs/file-input/file-input.component';
 import {FormService} from './services/app/form.service';
+import {CarouselDirective} from './components/carousel/directives/carousel.directive';
+import {CarouselComponent} from './components/carousel/carousel.component';
 
 @NgModule({
   imports: [
@@ -87,7 +89,9 @@ import {FormService} from './services/app/form.service';
     CommunicationDialogComponent,
     InputComponent,
     CheckboxComponent,
-    FileInputComponent
+    FileInputComponent,
+    CarouselDirective,
+    CarouselComponent
   ],
   exports: [
     FormsModule,
@@ -112,7 +116,9 @@ import {FormService} from './services/app/form.service';
     CommunicationDialogComponent,
     InputComponent,
     CheckboxComponent,
-    FileInputComponent
+    FileInputComponent,
+    CarouselDirective,
+    CarouselComponent
   ],
   entryComponents: [
     ConfirmDialogComponent,
