@@ -31,6 +31,16 @@ export class CarouselComponent {
   @Input() carouselItems: any = [];
 
   /**
+   * Possibility to hide the next and previous buttons
+   */
+  @Input() hideNextPrevButtons = false;
+
+  /**
+   * True to hide the position indicator
+   */
+  @Input() hidePositionIndicator = false;
+
+  /**
    * Expose a template that can be used by the users to retrieve the current displayed item
    */
   @ContentChild(TemplateRef) carouselTemplate: TemplateRef<any>;
@@ -39,5 +49,9 @@ export class CarouselComponent {
    * Constructor
    */
   constructor() {
+  }
+
+  getRangeNumber() {
+    return Array.from(Array(this.carouselItems.length).keys())
   }
 }

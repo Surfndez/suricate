@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
+.mat-icon {
+  background: transparent;
+}
+
 .carousel-wrapper {
   & {
     position: relative;
-    width: 100%;
     min-width: 200px;
+    width: 100%;
   }
 
-  .carousel-button-wrapper {
+  .carousel-next-prev-button-wrapper {
     & {
       position: absolute;
       width: 100%;
@@ -31,13 +35,30 @@
     .carousel-button {
       & {
         height: inherit;
-        width: 8%;
         min-width: 70px;
+        width: 8%;
+        background: transparent;
+        border: transparent;
+        cursor: pointer;
       }
 
       &.carousel-button-right {
         float: right;
       }
+    }
+  }
+
+  .carousel-position-indicator-wrapper {
+    & {
+      position: absolute;
+      width: fit-content;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    & .mat-icon {
+      cursor: default;
     }
   }
 }

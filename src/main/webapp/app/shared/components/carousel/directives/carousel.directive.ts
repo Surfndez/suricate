@@ -52,6 +52,7 @@ export class CarouselDirective implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.context = {
       $implicit: this.carouselItems[0],
+      index: 0,
       controller: {
         next: () => this.next(),
         prev: () => this.prev()
@@ -73,6 +74,7 @@ export class CarouselDirective implements OnInit, OnDestroy {
       this.index = 0;
     }
     this.context.$implicit = this.carouselItems[this.index];
+    this.context.index = this.index;
   }
 
   /**
@@ -86,6 +88,7 @@ export class CarouselDirective implements OnInit, OnDestroy {
       this.index = this.carouselItems.length - 1;
     }
     this.context.$implicit = this.carouselItems[this.index];
+    this.context.index = this.index;
   }
 
   /**

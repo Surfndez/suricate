@@ -23,6 +23,10 @@ export interface CarouselContext {
    */
   $implicit: string;
   /**
+   * The current index of the slide
+   */
+  index: number;
+  /**
    * Add some behavior to our carousel
    */
   controller: {
