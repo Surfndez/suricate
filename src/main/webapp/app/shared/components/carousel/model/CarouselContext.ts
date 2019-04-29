@@ -27,10 +27,16 @@ export interface CarouselContext {
    */
   index: number;
   /**
+   * True if the carousel is in rotation state
+   */
+  playing: boolean;
+  /**
    * Add some behavior to our carousel
    */
   controller: {
     next: () => void;
     prev: () => void;
+    stop: () => void;
+    play: () => void;
   };
 }

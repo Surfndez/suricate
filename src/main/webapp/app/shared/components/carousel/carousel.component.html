@@ -1,10 +1,16 @@
 <div class="carousel-wrapper"
-     *carousel="let carouselItem from carouselItems autoplay 'on'; let ctrl = controller; let carouselIndex = index"
+     *carousel="let carouselItem from carouselItems autoplay 'on'; let ctrl = controller; let carouselIndex = index; let carouselPlaying = playing"
      style="height: 89vh;">
 
-  <div *ngIf="!hideNextPrevButtons" class="carousel-next-prev-button-wrapper">
+  <div *ngIf="!hideNextPrevButtons" class="carousel-button-wrapper">
     <button class="carousel-button carousel-button-left" (click)="ctrl.prev()">
       <mat-icon>arrow_back_ios</mat-icon>
+    </button>
+    <button class="carousel-button carousel-button-play-pause" *ngIf="carouselPlaying" (click)="ctrl.stop()">
+      <mat-icon>pause</mat-icon>
+    </button>
+    <button class="carousel-button carousel-button-play-pause" *ngIf="!carouselPlaying" (click)="ctrl.play()">
+      <mat-icon>play_arrow</mat-icon>
     </button>
     <button class="carousel-button carousel-button-right" (click)="ctrl.next()">
       <mat-icon>arrow_forward_ios</mat-icon>

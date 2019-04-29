@@ -29,7 +29,7 @@ export class CarouselDirective implements OnInit, OnDestroy {
   /**
    * Set the autoplay to on or off default is off
    */
-  @Input('carouselAutoplay') autoplay: 'on' | 'off' = 'off';
+  @Input('carouselAutoplay') autoplay: 'on' | 'off' = 'on';
 
   /**
    * Event raised when the current element has changed
@@ -53,9 +53,12 @@ export class CarouselDirective implements OnInit, OnDestroy {
     this.context = {
       $implicit: this.carouselItems[0],
       index: 0,
+      playing: this.autoplay === 'on',
       controller: {
         next: () => this.next(),
-        prev: () => this.prev()
+        prev: () => this.prev(),
+        stop: () => this.stop(),
+        play: () => this.play()
       }
     };
 
@@ -67,7 +70,9 @@ export class CarouselDirective implements OnInit, OnDestroy {
    * Go to the next slide
    */
   next() {
-    this.resetTimer();
+    if (this.context.playing) {
+      this.resetTimer();
+    }
 
     this.index++;
     if (this.index >= this.carouselItems.length) {
@@ -81,7 +86,9 @@ export class CarouselDirective implements OnInit, OnDestroy {
    * Go back to the slide
    */
   prev() {
-    this.resetTimer();
+    if (this.context.playing) {
+      this.resetTimer();
+    }
 
     this.index--;
     if (this.index < 0) {
@@ -89,6 +96,22 @@ export class CarouselDirective implements OnInit, OnDestroy {
     }
     this.context.$implicit = this.carouselItems[this.index];
     this.context.index = this.index;
+  }
+
+  /**
+   * Stop the carousel
+   */
+  stop() {
+    this.context.playing = false;
+    this.clearAutoplayTimer();
+  }
+
+  /**
+   * Play carousel
+   */
+  play() {
+    this.context.playing = true;
+    this.setAutoplayTimer();
   }
 
   /**
