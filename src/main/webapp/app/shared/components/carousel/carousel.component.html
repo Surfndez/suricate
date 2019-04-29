@@ -1,6 +1,11 @@
 <div class="carousel-wrapper"
-     *carousel="let carouselItem from carouselItems autoplay 'on'; let ctrl = controller; let carouselIndex = index; let carouselPlaying = playing"
-     style="height: 89vh;">
+     *carousel="let carouselItem from carouselItems autoplay 'on'; let ctrl = controller; let carouselIndex = index; let carouselPlaying = playing">
+
+  <div *ngIf="!hidePositionIndicator" class="carousel-position-indicator-wrapper">
+    <mat-icon *ngFor="let indicatorIndex of getRangeNumber()">
+      {{ carouselIndex == indicatorIndex ? 'lens' : 'panorama_fish_eye' }}
+    </mat-icon>
+  </div>
 
   <div *ngIf="!hideNextPrevButtons" class="carousel-button-wrapper">
     <button class="carousel-button carousel-button-left" (click)="ctrl.prev()">
@@ -15,12 +20,6 @@
     <button class="carousel-button carousel-button-right" (click)="ctrl.next()">
       <mat-icon>arrow_forward_ios</mat-icon>
     </button>
-  </div>
-
-  <div *ngIf="!hidePositionIndicator" class="carousel-position-indicator-wrapper">
-    <mat-icon *ngFor="let indicatorIndex of getRangeNumber()">
-      {{ carouselIndex == indicatorIndex ? 'lens' : 'panorama_fish_eye' }}
-    </mat-icon>
   </div>
 
   <template [ngTemplateOutlet]="carouselTemplate"

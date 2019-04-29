@@ -133,7 +133,7 @@ export class CarouselDirective implements OnInit, OnDestroy {
    * Set a new interval
    */
   private setAutoplayTimer() {
-    this.timer = window.setInterval(() => this.next(), 5000);
+    this.timer = window.setInterval(() => this.next(), 60000);
   }
 
   /**
