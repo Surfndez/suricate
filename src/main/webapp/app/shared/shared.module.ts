@@ -61,6 +61,7 @@ import {FileInputComponent} from './components/form/inputs/file-input/file-input
 import {FormService} from './services/app/form.service';
 import {CarouselDirective} from './components/carousel/directives/carousel.directive';
 import {CarouselComponent} from './components/carousel/carousel.component';
+import {HttpProjectSlideService} from "./services/api/http-project-slide.service";
 
 @NgModule({
   imports: [
@@ -137,6 +138,7 @@ import {CarouselComponent} from './components/carousel/carousel.component';
     HttpAssetService,
     HttpCategoryService,
     HttpProjectService,
+    HttpProjectSlideService,
     HttpProjectWidgetService,
     HttpRoleService,
     HttpScreenService,
